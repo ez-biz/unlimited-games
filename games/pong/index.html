@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Pong | Unlimited Games</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="game-ui">
+        <div class="header-row">
+            <a href="../../index.html" class="back-btn">&larr; Back to Hub</a>
+            <h1 id="game-title">NEON PONG</h1>
+            <div style="width: 100px;"></div> <!-- Spacer -->
+        </div>
+
+        <div class="scoreboard">
+            <div class="score-box p1">
+                <span id="p1-score">0</span>
+                <span class="label">PLAYER 1</span>
+            </div>
+            <div class="score-box p2">
+                <span id="p2-score">0</span>
+                <span class="label" id="p2-label">CPU</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
+
+        <div id="start-screen" class="overlay">
+            <h2>SELECT MODE</h2>
+            <div class="mode-select">
+                <button id="mode-1p" class="active">1 PLAYER (vs CPU)</button>
+                <button id="mode-2p">2 PLAYERS (Local)</button>
+            </div>
+
+            <div id="difficulty-select" class="difficulty-select">
+                <p>CPU DIFFICULTY</p>
+                <div class="options">
+                    <button data-diff="easy">EASY</button>
+                    <button data-diff="medium" class="active">MEDIUM</button>
+                    <button data-diff="hard">HARD</button>
+                </div>
+            </div>
+
+            <p class="mt-20">Press SPACE to Start</p>
+        </div>
+
+        <div id="game-overlay" class="hidden overlay">
+            <h2 id="overlay-title">PLAYER 1 WINS!</h2>
+            <button id="restart-btn">PLAY AGAIN</button>
+            <button id="menu-btn">MAIN MENU</button>
+        </div>
+    </div>
+
+    <div class="controls-hint">
+        <div class="ctrl-col">
+            <span class="key">W</span><span class="key">S</span>
+            <p>PLAYER 1</p>
+        </div>
+        <div class="ctrl-col">
+            <span class="key">↑</span><span class="key">↓</span>
+            <p>PLAYER 2 / MENU</p>
+        </div>
+        <div class="ctrl-col">
+            <span class="key space">SPACE</span>
+            <p>PAUSE / START</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+:root {
+    --bg-color: #0d0d12;
+    --main-color: #00d4ff;
+    /* Neon Cyan */
+    --accent-color: #ff0055;
+    /* Neon Pink */
+    --text-color: #ffffff;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.game-ui {
+    width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-info {
+    text-align: center;
+}
+
+#game-title {
+    font-size: 24px;
+    background: linear-gradient(90deg, #00d4ff, #8a2be2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    margin: 0 0 10px 0;
+}
+
+#lives-display,
+#score-board {
+    font-size: 14px;
+    color: #ccc;
+}
+
+.back-btn {
+    text-decoration: none;
+    color: #666;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.back-btn:hover {
+    color: #fff;
+}
+
+#game-container {
+    position: relative;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+    border: 4px solid #333;
+    border-radius: 4px;
+}
+
+canvas {
+    background-color: #111;
+    display: block;
+}
+
+/* Overlays */
+#game-overlay,
+#level-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h2 {
+    font-size: 32px;
+    color: var(--main-color);
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+button {
+    background: linear-gradient(90deg, var(--main-color), #8a2be2);
+    border: none;
+    padding: 15px 30px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    color: #000;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: transform 0.1s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+.controls-hint {
+    margin-top: 2rem;
+    color: #444;
+    font-size: 0.8rem;
+    font-family: sans-serif;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon 2048 | Unlimited Games</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="game-container">
+        <header>
+            <a href="../../index.html" class="back-btn">← Hub</a>
+            <h1>NEON 2048</h1>
+            <div class="scores">
+                <div class="score-box">
+                    <span class="label">SCORE</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="score-box">
+                    <span class="label">BEST</span>
+                    <span id="best">0</span>
+                </div>
+            </div>
+        </header>
+
+        <div id="grid-container">
+            <div id="grid"></div>
+        </div>
+
+        <div class="controls">
+            <button id="newGameBtn">New Game</button>
+        </div>
+
+        <p class="hint">Use <strong>Arrow Keys</strong> or <strong>WASD</strong> to move tiles</p>
+
+        <div id="game-overlay" class="overlay hidden">
+            <div class="overlay-content">
+                <h2 id="overlay-title">Game Over!</h2>
+                <p id="overlay-score">Score: 0</p>
+                <button id="restartBtn">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

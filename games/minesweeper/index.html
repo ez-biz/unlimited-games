@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Mines | Unlimited Games</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="game-ui">
+        <a href="../../index.html" class="back-btn">&larr; Back to Hub</a>
+        <h1 id="game-title">NEON MINES</h1>
+    </div>
+
+    <div id="game-container">
+        <div class="hud">
+            <div class="counter-box">
+                <span id="mine-count">010</span>
+                <span class="label">MINES</span>
+            </div>
+
+            <button id="face-btn">🙂</button>
+
+            <div class="counter-box">
+                <span id="timer">000</span>
+                <span class="label">TIME</span>
+            </div>
+        </div>
+
+        <div id="grid-wrapper">
+            <div id="grid"></div>
+        </div>
+
+        <div class="controls-panel">
+            <button class="diff-btn active" data-mode="easy">EASY (9x9)</button>
+            <button class="diff-btn" data-mode="medium">MEDIUM (16x16)</button>
+            <button class="diff-btn" data-mode="hard">HARD (30x16)</button>
+        </div>
+
+        <div id="game-overlay" class="hidden overlay">
+            <h2 id="overlay-title">CLEARED!</h2>
+            <p>Time: <span id="final-time">0</span>s</p>
+            <button id="restart-btn">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <div class="controls-hint">
+        <p><strong>L-CLICK</strong> Reveal • <strong>R-CLICK</strong> Flag</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Plumber | Unlimited Games</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="game-ui">
+        <div class="hud-top">
+            <div class="hud-item">
+                <span class="label">MARIO</span>
+                <span id="score">000000</span>
+            </div>
+            <div class="hud-item">
+                <span class="label">COINS</span>
+                <span id="coins">x00</span>
+            </div>
+            <div class="hud-item">
+                <span class="label">WORLD</span>
+                <span id="world">1-1</span>
+            </div>
+            <div class="hud-item">
+                <span class="label">TIME</span>
+                <span id="time">300</span>
+            </div>
+        </div>
+        <a href="../../index.html" class="back-btn">&larr; Back to Hub</a>
+    </div>
+
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="480"></canvas>
+
+        <div id="game-overlay" class="hidden overlay">
+            <h2 id="overlay-title">GAME OVER</h2>
+            <button id="restart-btn">TRY AGAIN</button>
+        </div>
+    </div>
+
+    <div class="controls-hint">
+        <p><strong>ARROWS/WASD</strong> Move • <strong>SPACE/UP</strong> Jump • <strong>SHIFT</strong> Run/Fire •
+            <strong>P</strong> Pause</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

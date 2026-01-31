@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Flap | Unlimited Games</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="game-ui">
+        <a href="../../index.html" class="back-btn">&larr; Back to Hub</a>
+        <h1 id="game-title">NEON FLAP</h1>
+        <div id="score-board">SCORE: <span id="score">0</span></div>
+    </div>
+
+    <div id="game-container">
+        <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+        <div id="start-screen" class="overlay">
+            <h2>READY?</h2>
+            <p>Press SPACE or Click to Flap</p>
+        </div>
+
+        <div id="game-overlay" class="hidden overlay">
+            <h2 id="overlay-title">GAME OVER</h2>
+            <div class="score-card">
+                <p>Score: <span id="final-score">0</span></p>
+                <p>Best: <span id="best-score">0</span></p>
+                <div id="medal" class="hidden">🏅</div>
+            </div>
+            <button id="restart-btn">Try Again</button>
+        </div>
+    </div>
+
+    <div class="controls-hint">
+        <p>Tap <strong>Space</strong> or <strong>Click</strong> to fly</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

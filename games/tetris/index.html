@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Tetris | Unlimited Games</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="game-wrapper">
+        <div class="side-panel left">
+            <div class="panel-box">
+                <h3>HOLD</h3>
+                <canvas id="holdCanvas" width="80" height="80"></canvas>
+            </div>
+            <div class="text-info">
+                <p>LEVEL</p>
+                <span id="level">1</span>
+            </div>
+            <div class="text-info">
+                <p>LINES</p>
+                <span id="lines">0</span>
+            </div>
+        </div>
+
+        <div class="game-container">
+            <canvas id="gameCanvas" width="240" height="400"></canvas>
+            <div id="game-overlay" class="hidden">
+                <h2 id="overlay-title">GAME OVER</h2>
+                <p id="overlay-score">Score: 0</p>
+                <button id="restart-btn">Try Again</button>
+            </div>
+            <div id="countdown-overlay" class="hidden">
+                <span id="countdown">3</span>
+            </div>
+        </div>
+
+        <div class="side-panel right">
+            <div class="panel-box">
+                <h3>NEXT</h3>
+                <canvas id="nextCanvas" width="80" height="240"></canvas>
+            </div>
+            <div class="text-info">
+                <p>SCORE</p>
+                <span id="score">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls-hint">
+        <a href="../../index.html" class="back-btn">&larr; Back to Hub</a>
+        <p><strong>ARROWS</strong> Move/Rotate • <strong>SPACE</strong> Drop • <strong>C</strong> Hold</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,275 @@
+:root {
+    --bg-color: #0d0d12;
+    --cell-hidden: #1a1a24;
+    --cell-revealed: #000;
+    --highlight: #2a2a35;
+    --neon-blue: #00d4ff;
+    --neon-pink: #ff0055;
+    --neon-green: #00ff88;
+    --text-color: #ffffff;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    user-select: none;
+    /* Prevent text selection */
+}
+
+.game-ui {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#game-title {
+    font-size: 20px;
+    background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    margin: 0;
+}
+
+.back-btn {
+    text-decoration: none;
+    color: #666;
+    font-size: 10px;
+    font-family: sans-serif;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.back-btn:hover {
+    color: #fff;
+}
+
+#game-container {
+    background: #000;
+    border: 4px solid #333;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+    padding: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* HUD */
+.hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    background: #111;
+    border: 2px solid #333;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.counter-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.counter-box span {
+    color: #ff0000;
+    font-family: monospace;
+    font-size: 24px;
+    background: #000;
+    padding: 5px;
+    border: 1px solid #333;
+}
+
+.counter-box .label {
+    font-size: 8px;
+    color: #666;
+    border: none;
+    background: none;
+    margin-top: 5px;
+    font-family: 'Press Start 2P', cursive;
+}
+
+#face-btn {
+    font-size: 24px;
+    background: #222;
+    border: 2px solid #444;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#face-btn:hover {
+    background: #333;
+    border-color: #666;
+}
+
+#face-btn:active {
+    border-style: inset;
+}
+
+/* Grid */
+#grid-wrapper {
+    overflow: auto;
+    max-width: 90vw;
+    max-height: 70vh;
+    border: 2px solid #333;
+    /* Bevel look */
+}
+
+#grid {
+    display: grid;
+    background: #333;
+    /* Gap color */
+    gap: 1px;
+}
+
+.cell {
+    width: 24px;
+    height: 24px;
+    background: var(--cell-hidden);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Press Start 2P', cursive;
+    /* or monospace for cleaner numbers */
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.1), inset -2px -2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.cell.revealed {
+    background: var(--cell-revealed);
+    box-shadow: none;
+    border: 1px solid #111;
+}
+
+.cell:hover:not(.revealed) {
+    background: var(--highlight);
+}
+
+/* Colors for numbers */
+.cell[data-val="1"] {
+    color: #00d4ff;
+}
+
+.cell[data-val="2"] {
+    color: #00ff88;
+}
+
+.cell[data-val="3"] {
+    color: #ff0055;
+}
+
+.cell[data-val="4"] {
+    color: #bb00ff;
+}
+
+.cell[data-val="5"] {
+    color: #ffaa00;
+}
+
+.cell[data-val="6"] {
+    color: #00ffff;
+}
+
+.cell[data-val="7"] {
+    color: #fff;
+}
+
+.cell[data-val="8"] {
+    color: #888;
+}
+
+.cell.mine {
+    background: #500;
+}
+
+.cell.flag {
+    color: #ff0055;
+}
+
+/* Controls */
+.controls-panel {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.diff-btn {
+    background: #222;
+    color: #888;
+    border: 1px solid #444;
+    padding: 10px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    cursor: pointer;
+}
+
+.diff-btn:hover {
+    color: #fff;
+    border-color: #666;
+}
+
+.diff-btn.active {
+    background: #00d4ff;
+    color: #000;
+    border-color: #00d4ff;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* Overlay */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h2 {
+    color: var(--neon-green);
+    margin-bottom: 20px;
+}
+
+#restart-btn {
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
+    border: none;
+    padding: 15px 30px;
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.controls-hint {
+    margin-top: 20px;
+    color: #666;
+    font-size: 10px;
+    font-family: sans-serif;
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Doodle | Multiplayer Drawing Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- MENU SCREEN -->
+    <div id="menu-screen" class="screen active">
+        <h1 class="logo">NEON<br>DOODLE</h1>
+        <p class="tagline">Draw. Guess. Win!</p>
+
+        <div class="menu-form">
+            <input type="text" id="playerName" placeholder="Your Name" maxlength="15" />
+
+            <button id="createRoomBtn" class="btn primary">Create Room</button>
+
+            <div class="divider">OR</div>
+
+            <input type="text" id="roomCodeInput" placeholder="Room Code" maxlength="6" />
+            <button id="joinRoomBtn" class="btn">Join Room</button>
+        </div>
+
+        <a href="../../index.html" class="back-link">← Back to Arcade</a>
+    </div>
+
+    <!-- LOBBY SCREEN -->
+    <div id="lobby-screen" class="screen">
+        <div class="lobby-header">
+            <h2>ROOM: <span id="roomCode">------</span></h2>
+            <button id="copyCodeBtn" class="btn small">Copy</button>
+        </div>
+
+        <div class="players-list" id="playersList"></div>
+
+        <div class="lobby-settings" id="lobbySettings">
+            <h3>Settings</h3>
+            <label>Rounds: <select id="roundsSetting">
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="5">5</option>
+                </select></label>
+            <label>Draw Time: <select id="timeSetting">
+                    <option value="60">60s</option>
+                    <option value="80" selected>80s</option>
+                    <option value="120">120s</option>
+                </select></label>
+        </div>
+
+        <button id="startGameBtn" class="btn primary large">Start Game</button>
+        <p class="hint" id="waitingHint">Waiting for host to start...</p>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="round-info">Round <span id="roundNum">1</span>/<span id="totalRounds">3</span></div>
+            <div class="word-hint" id="wordHint">_ _ _ _ _</div>
+            <div class="timer" id="timer">80</div>
+        </div>
+
+        <div class="game-main">
+            <!-- Players Sidebar -->
+            <div class="sidebar left" id="scoreboard"></div>
+
+            <!-- Canvas Area -->
+            <div class="canvas-container">
+                <canvas id="drawCanvas" width="800" height="500"></canvas>
+
+                <!-- Word Selection (Drawer only) -->
+                <div id="wordSelection" class="word-selection hidden">
+                    <p>Choose a word to draw:</p>
+                    <div id="wordChoices"></div>
+                </div>
+            </div>
+
+            <!-- Chat Sidebar -->
+            <div class="sidebar right">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input-container">
+                    <input type="text" id="chatInput" placeholder="Type your guess..." maxlength="50" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Drawing Tools (Drawer only) -->
+        <div id="drawTools" class="draw-tools hidden">
+            <div class="colors" id="colorPalette"></div>
+            <div class="sizes">
+                <button class="size-btn" data-size="4">S</button>
+                <button class="size-btn active" data-size="8">M</button>
+                <button class="size-btn" data-size="16">L</button>
+                <button class="size-btn" data-size="32">XL</button>
+            </div>
+            <div class="tool-actions">
+                <button id="eraserBtn" class="tool-btn">🧹</button>
+                <button id="undoBtn" class="tool-btn">↩️</button>
+                <button id="clearBtn" class="tool-btn">🗑️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS OVERLAY -->
+    <div id="resultsOverlay" class="overlay hidden">
+        <div class="results-content">
+            <h2 id="resultsTitle">Round Over!</h2>
+            <p id="revealWord">The word was: <strong></strong></p>
+            <div id="resultsList"></div>
+        </div>
+    </div>
+
+    <!-- GAME END OVERLAY -->
+    <div id="gameEndOverlay" class="overlay hidden">
+        <div class="results-content">
+            <h2>🏆 Game Over! 🏆</h2>
+            <div id="finalRankings"></div>
+            <button id="playAgainBtn" class="btn primary">Play Again</button>
+            <button id="exitBtn" class="btn">Exit to Menu</button>
+        </div>
+    </div>
+
+    <!-- ERROR TOAST -->
+    <div id="errorToast" class="toast hidden"></div>
+
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

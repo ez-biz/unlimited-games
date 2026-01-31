@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Invaders | Unlimited Games</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="game-ui">
+        <a href="../../index.html" class="back-btn">&larr; Back to Hub</a>
+        <h1 id="game-title">NEON INVADERS</h1>
+        <div class="stats">
+            <div id="score-board">SCORE: <span id="score">0</span></div>
+            <div id="high-score-board">HI: <span id="high-score">0</span></div>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <canvas id="gameCanvas" width="600" height="700"></canvas>
+
+        <div id="lives-display">
+            LIVES: <span id="lives">3</span>
+        </div>
+
+        <div id="start-screen" class="overlay">
+            <h2>DEFEND EARTH</h2>
+            <p>Arrows to Move • Space to Shoot</p>
+            <button id="start-btn">ENGAGE</button>
+        </div>
+
+        <div id="game-overlay" class="hidden overlay">
+            <h2 id="overlay-title">GAME OVER</h2>
+            <p>Score: <span id="final-score">0</span></p>
+            <button id="restart-btn">RETRY</button>
+        </div>
+
+        <div id="level-overlay" class="hidden overlay">
+            <h2>WAVE CLEANSED</h2>
+            <p>Preparing next wave...</p>
+        </div>
+    </div>
+
+    <div class="controls-hint">
+        <p><strong>ARROWS/WASD</strong> Move • <strong>SPACE</strong> Fire</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
