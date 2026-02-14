@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Runner 3D Ultimate | Unlimited Games</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="../../assets/lib/neon-materials.js"></script>
+</head>
+
+<body>
+    <div class="game-container">
+        <header>
+            <a href="../../index.html" class="back-btn">← Hub</a>
+            <h1>NEON RUNNER <span class="badge">3D ULTIMATE</span></h1>
+            <div class="hud">
+                <div class="hud-item coins">
+                    <span class="label">COINS</span>
+                    <span id="coins">0</span>
+                </div>
+                <div class="hud-item">
+                    <span class="label">SCORE</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="hud-item">
+                    <span class="label">BEST</span>
+                    <span id="best">0</span>
+                </div>
+                <div class="hud-item distance">
+                    <span class="label">DISTANCE</span>
+                    <span id="distance">0m</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Power-up indicator -->
+        <div id="powerUpIndicator" class="power-up-indicator hidden">
+            <span id="powerUpIcon">🛡️</span>
+            <span id="powerUpName">SHIELD</span>
+            <div class="power-up-bar">
+                <div id="powerUpProgress" class="power-up-progress"></div>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <p class="hint">← → to switch lanes | SPACE/↑ to jump | M to mute</p>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="overlay">
+            <h2>NEON RUNNER 3D</h2>
+            <p class="subtitle">Ultimate Edition</p>
+
+            <!-- Character Selection -->
+            <div class="character-select">
+                <p class="section-label">SELECT CHARACTER</p>
+                <div class="character-options">
+                    <button class="char-btn active" data-char="runner" title="Balanced runner">
+                        <span class="char-icon">🟦</span>
+                        <span class="char-name">Runner</span>
+                        <span class="char-desc">Balanced</span>
+                    </button>
+                    <button class="char-btn" data-char="speeder" title="Fast lane switch">
+                        <span class="char-icon">🟩</span>
+                        <span class="char-name">Speeder</span>
+                        <span class="char-desc">+Lane Speed</span>
+                    </button>
+                    <button class="char-btn" data-char="jumper" title="Triple jump">
+                        <span class="char-icon">🟪</span>
+                        <span class="char-name">Jumper</span>
+                        <span class="char-desc">Triple Jump</span>
+                    </button>
+                    <button class="char-btn" data-char="tank" title="Starts with shield">
+                        <span class="char-icon">🟧</span>
+                        <span class="char-name">Tank</span>
+                        <span class="char-desc">+Shield</span>
+                    </button>
+                </div>
+            </div>
+
+            <button id="startBtn">START RUN</button>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <span class="stat-label">BEST DISTANCE</span>
+                    <span id="bestDistance">0m</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">TOTAL COINS</span>
+                    <span id="totalCoins">0</span>
+                </div>
+            </div>
+
+            <p class="controls-hint">SPACE/↑ jump | ← → lanes | Double jump!</p>
+        </div>
+
+        <!-- Game Over -->
+        <div id="game-over" class="overlay hidden">
+            <h2>GAME OVER</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-value" id="finalScore">0</span>
+                    <span class="stat-name">Score</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="finalDistance">0m</span>
+                    <span class="stat-name">Distance</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="finalCoins">0</span>
+                    <span class="stat-name">Coins</span>
+                </div>
+            </div>
+            <div id="newRecord" class="new-record hidden">🏆 NEW RECORD!</div>
+            <button id="restartBtn">TRY AGAIN</button>
+            <button id="menuBtn" class="secondary-btn">MAIN MENU</button>
+        </div>
+
+        <!-- Floating Messages -->
+        <div id="floatingMessage" class="floating-message hidden"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

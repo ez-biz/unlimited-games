@@ -36,7 +36,7 @@ const ROWS = 15;
 const COLS = 100;
 
 let map = [];
-let camera = { x: 0, y: 0 };
+const camera = { x: 0, y: 0 };
 
 // Game State
 let score = 0;
@@ -56,7 +56,7 @@ const keys = {
 };
 
 // Player
-let player = {
+const player = {
     x: 100,
     y: 100,
     width: 24, // Slightly smaller than tile
@@ -68,7 +68,7 @@ let player = {
 };
 
 // Particles
-let particles = [];
+const particles = [];
 
 function init() {
     isGameOver = false;
@@ -198,10 +198,10 @@ function update() {
 }
 
 function collideX() {
-    let top = Math.floor(player.y / TILE_SIZE);
-    let bottom = Math.floor((player.y + player.height - 1) / TILE_SIZE);
-    let left = Math.floor(player.x / TILE_SIZE);
-    let right = Math.floor((player.x + player.width - 1) / TILE_SIZE);
+    const top = Math.floor(player.y / TILE_SIZE);
+    const bottom = Math.floor((player.y + player.height - 1) / TILE_SIZE);
+    const left = Math.floor(player.x / TILE_SIZE);
+    const right = Math.floor((player.x + player.width - 1) / TILE_SIZE);
 
     // Check Right
     if (player.vx > 0) {
@@ -220,10 +220,10 @@ function collideX() {
 }
 
 function collideY() {
-    let top = Math.floor(player.y / TILE_SIZE);
-    let bottom = Math.floor((player.y + player.height - 1) / TILE_SIZE);
-    let left = Math.floor(player.x / TILE_SIZE);
-    let right = Math.floor((player.x + player.width - 1) / TILE_SIZE);
+    const top = Math.floor(player.y / TILE_SIZE);
+    const bottom = Math.floor((player.y + player.height - 1) / TILE_SIZE);
+    const left = Math.floor(player.x / TILE_SIZE);
+    const right = Math.floor((player.x + player.width - 1) / TILE_SIZE);
 
     // Check Down
     if (player.vy > 0) {
@@ -254,7 +254,7 @@ function isSolid(x, y) {
 
 function interact(x, y) {
     if (x < 0 || x >= COLS || y < 0 || y >= ROWS) return;
-    let tile = map[y][x];
+    const tile = map[y][x];
     if (tile === TILE_Q) {
         map[y][x] = TILE_BLOCK; // Used
         score += 100;
@@ -284,9 +284,9 @@ function draw() {
     // Draw Map
     for (let r = 0; r < ROWS; r++) {
         for (let c = Math.floor(camera.x / TILE_SIZE); c < Math.min(COLS, Math.floor((camera.x + canvas.width) / TILE_SIZE) + 1); c++) {
-            let tile = map[r][c];
-            let x = c * TILE_SIZE;
-            let y = r * TILE_SIZE;
+            const tile = map[r][c];
+            const x = c * TILE_SIZE;
+            const y = r * TILE_SIZE;
 
             if (tile === TILE_GROUND) {
                 ctx.fillStyle = '#00ff88';

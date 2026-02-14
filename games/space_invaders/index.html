@@ -4,49 +4,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Invaders | Unlimited Games</title>
+    <title>Neon Invaders 3D Ultimate | Unlimited Games</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="../../assets/lib/neon-materials.js"></script>
 </head>
 
 <body>
+    <div class="game-container">
+        <header>
+            <a href="../../index.html" class="back-btn">← Hub</a>
+            <h1>NEON INVADERS <span class="badge">3D ULTIMATE</span></h1>
+            <div class="hud">
+                <div class="hud-item">
+                    <span class="label">SCORE</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="hud-item combo-display hidden" id="comboDisplay">
+                    <span class="label">COMBO</span>
+                    <span id="combo">x1</span>
+                </div>
+                <div class="hud-item">
+                    <span class="label">LIVES</span>
+                    <span id="lives">♥♥♥</span>
+                </div>
+                <div class="hud-item">
+                    <span class="label">WAVE</span>
+                    <span id="wave">1</span>
+                </div>
+                <div class="hud-item power-up-display hidden" id="powerUpDisplay">
+                    <span class="label">POWER</span>
+                    <span id="powerUpName">-</span>
+                </div>
+            </div>
+        </header>
 
-    <div class="game-ui">
-        <a href="../../index.html" class="back-btn">&larr; Back to Hub</a>
-        <h1 id="game-title">NEON INVADERS</h1>
-        <div class="stats">
-            <div id="score-board">SCORE: <span id="score">0</span></div>
-            <div id="high-score-board">HI: <span id="high-score">0</span></div>
+        <canvas id="gameCanvas"></canvas>
+
+        <p class="hint">← → to move | SPACE to shoot | P to pause | M to mute</p>
+
+        <!-- Floating combo text -->
+        <div id="comboText" class="combo-text hidden">COMBO x2!</div>
+
+        <!-- Achievement popup -->
+        <div id="achievementPopup" class="achievement-popup hidden">
+            <span class="achievement-icon">🏆</span>
+            <span id="achievementName">Achievement!</span>
         </div>
-    </div>
 
-    <div id="game-container">
-        <canvas id="gameCanvas" width="600" height="700"></canvas>
+        <div id="start-overlay" class="overlay">
+            <h2>NEON INVADERS 3D</h2>
+            <p class="subtitle">Ultimate Edition</p>
 
-        <div id="lives-display">
-            LIVES: <span id="lives">3</span>
+            <!-- Ship Selection -->
+            <div class="ship-select">
+                <p class="section-label">SELECT SHIP</p>
+                <div class="ship-options">
+                    <button class="ship-btn active" data-ship="fighter" title="Balanced fighter">
+                        <span class="ship-icon">🚀</span>
+                        <span class="ship-name">Fighter</span>
+                    </button>
+                    <button class="ship-btn" data-ship="heavy" title="Slow but powerful">
+                        <span class="ship-icon">🛸</span>
+                        <span class="ship-name">Heavy</span>
+                    </button>
+                    <button class="ship-btn" data-ship="speeder" title="Fast and agile">
+                        <span class="ship-icon">⚡</span>
+                        <span class="ship-name">Speeder</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mode-select">
+                <p class="section-label">GAME MODE</p>
+                <div class="mode-options">
+                    <button class="mode-btn active" data-mode="classic">Classic</button>
+                    <button class="mode-btn" data-mode="survival">Survival</button>
+                    <button class="mode-btn" data-mode="boss">Boss Rush</button>
+                    <button class="mode-btn" data-mode="challenge">Challenge</button>
+                </div>
+            </div>
+
+            <!-- Difficulty -->
+            <div class="difficulty-select">
+                <p class="section-label">DIFFICULTY</p>
+                <div class="difficulty-options">
+                    <button class="diff-btn" data-diff="easy">Easy</button>
+                    <button class="diff-btn active" data-diff="normal">Normal</button>
+                    <button class="diff-btn" data-diff="hard">Hard</button>
+                    <button class="diff-btn" data-diff="insane">Insane</button>
+                </div>
+            </div>
+
+            <button id="startBtn">START GAME</button>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <span class="stat-label">HIGH SCORE</span>
+                    <span id="highScore">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">ACHIEVEMENTS</span>
+                    <span id="achievementCount">0/15</span>
+                </div>
+            </div>
+
+            <button id="achievementsBtn" class="secondary-btn">VIEW ACHIEVEMENTS</button>
         </div>
 
-        <div id="start-screen" class="overlay">
-            <h2>DEFEND EARTH</h2>
-            <p>Arrows to Move • Space to Shoot</p>
-            <button id="start-btn">ENGAGE</button>
+        <div id="pause-overlay" class="overlay hidden">
+            <h2>PAUSED</h2>
+            <div class="pause-stats">
+                <p>Score: <span id="pauseScore">0</span></p>
+                <p>Wave: <span id="pauseWave">1</span></p>
+            </div>
+            <button id="resumeBtn">RESUME</button>
+            <button id="quitBtn" class="secondary-btn">QUIT TO MENU</button>
         </div>
 
-        <div id="game-overlay" class="hidden overlay">
-            <h2 id="overlay-title">GAME OVER</h2>
-            <p>Score: <span id="final-score">0</span></p>
-            <button id="restart-btn">RETRY</button>
+        <div id="game-over" class="overlay hidden">
+            <h2 id="gameOverText">GAME OVER</h2>
+            <p class="final-score">Final Score: <span id="finalScore">0</span></p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-value" id="statAccuracy">0%</span>
+                    <span class="stat-name">Accuracy</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statEnemies">0</span>
+                    <span class="stat-name">Enemies</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statMaxCombo">0</span>
+                    <span class="stat-name">Max Combo</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statWave">1</span>
+                    <span class="stat-name">Wave</span>
+                </div>
+            </div>
+            <div id="newAchievements" class="new-achievements hidden">
+                <p>New Achievements:</p>
+                <div id="achievementsList"></div>
+            </div>
+            <button id="restartBtn">PLAY AGAIN</button>
+            <button id="menuBtn" class="secondary-btn">MAIN MENU</button>
         </div>
 
-        <div id="level-overlay" class="hidden overlay">
-            <h2>WAVE CLEANSED</h2>
-            <p>Preparing next wave...</p>
+        <!-- Achievements Modal -->
+        <div id="achievements-modal" class="overlay hidden">
+            <h2>ACHIEVEMENTS</h2>
+            <div id="achievementsGrid" class="achievements-grid"></div>
+            <button id="closeAchievementsBtn">CLOSE</button>
         </div>
-    </div>
 
-    <div class="controls-hint">
-        <p><strong>ARROWS/WASD</strong> Move • <strong>SPACE</strong> Fire</p>
+        <div id="wave-banner" class="wave-banner hidden">
+            <h3>WAVE <span id="waveBannerNum">1</span></h3>
+            <p id="waveBannerSub"></p>
+        </div>
+
+        <!-- Challenge objective -->
+        <div id="challengeObjective" class="challenge-objective hidden">
+            <span id="objectiveText">Objective: Kill 10 enemies</span>
+            <div class="objective-progress">
+                <div id="objectiveBar" class="objective-bar"></div>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>

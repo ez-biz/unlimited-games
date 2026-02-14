@@ -1,329 +1,255 @@
+// Three.js Pong 3D
 const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+const score1El = document.getElementById('score1');
+const score2El = document.getElementById('score2');
+const startOverlay = document.getElementById('start-overlay');
+const pauseOverlay = document.getElementById('pause-overlay');
+const winOverlay = document.getElementById('win-overlay');
+const winText = document.getElementById('winText');
+const startBtn = document.getElementById('startBtn');
+const resumeBtn = document.getElementById('resumeBtn');
+const restartBtn = document.getElementById('restartBtn');
 
-// UI
-const p1ScoreEl = document.getElementById('p1-score');
-const p2ScoreEl = document.getElementById('p2-score');
-const p2LabelEl = document.getElementById('p2-label');
-const startScreen = document.getElementById('start-screen');
-const gameOverlay = document.getElementById('game-overlay');
-const overlayTitle = document.getElementById('overlay-title');
-const restartBtn = document.getElementById('restart-btn');
-const menuBtn = document.getElementById('menu-btn');
-const modeBtns = document.querySelectorAll('#mode-1p, #mode-2p');
-const diffBtns = document.querySelectorAll('.difficulty-select button');
-const diffSelect = document.getElementById('difficulty-select');
-
-// Constants
-const PADDLE_WIDTH = 10;
-const PADDLE_HEIGHT = 80;
-const BALL_SIZE = 10;
-const WIN_SCORE = 11;
-
-// Config
-let isMultiplayer = false;
-let aiDifficulty = 'medium'; // easy, medium, hard
-let aiSpeed = 4;
+// Game settings
+const WIDTH = 800;
+const HEIGHT = 500;
+const ARENA_WIDTH = 20;
+const ARENA_DEPTH = 12;
+const PADDLE_WIDTH = 0.5;
+const PADDLE_HEIGHT = 2.5;
+const PADDLE_DEPTH = 0.5;
+const BALL_RADIUS = 0.3;
+const WIN_SCORE = 5;
 
 // State
-let p1 = {
-    x: 20,
-    y: 210, // Centered (500/2 - 80/2)
-    score: 0,
-    color: '#00d4ff',
-    speed: 6,
-    dy: 0 // Movement direction
-};
+let score1 = 0, score2 = 0;
+let isPaused = true;
+let isGameOver = false;
+let ballSpeed = 0.15;
+const ballVelocity = { x: ballSpeed, z: ballSpeed };
 
-let p2 = {
-    x: 770, // 800 - 20 - 10
-    y: 210,
-    score: 0,
-    color: '#ff0055',
-    speed: 6, // Player Speed
-    dy: 0
-};
+// Three.js setup
+const scene = NeonMaterials.createScene();
+const camera = new THREE.PerspectiveCamera(50, WIDTH / HEIGHT, 0.1, 1000);
+camera.position.set(0, 15, 18);
+camera.lookAt(0, 0, 0);
 
-let ball = {
-    x: 400,
-    y: 250,
-    vx: 5,
-    vy: 5,
-    speed: 7
-};
+const renderer = NeonMaterials.createRenderer(canvas);
+renderer.setSize(WIDTH, HEIGHT);
 
-let gameState = 'START'; // START, PLAYING, END
-let isPaused = false;
+// Lighting
+NeonMaterials.setupLighting(scene);
 
-// Setup Event Listeners
-modeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        modeBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        isMultiplayer = btn.id === 'mode-2p';
-
-        if (isMultiplayer) {
-            diffSelect.classList.add('hidden');
-            p2LabelEl.innerText = "PLAYER 2";
-        } else {
-            diffSelect.classList.remove('hidden');
-            p2LabelEl.innerText = "CPU";
-        }
-    });
+// Arena floor
+const floorGeom = new THREE.PlaneGeometry(ARENA_WIDTH + 2, ARENA_DEPTH + 2);
+const floorMat = new THREE.MeshStandardMaterial({
+    color: 0x1a1a2e,
+    metalness: 0.8,
+    roughness: 0.3
 });
+const floor = new THREE.Mesh(floorGeom, floorMat);
+floor.rotation.x = -Math.PI / 2;
+floor.position.y = -0.5;
+scene.add(floor);
 
-diffBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        diffBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        aiDifficulty = btn.dataset.diff;
+// Grid
+const grid = new THREE.GridHelper(ARENA_WIDTH, 20, 0x333344, 0x222233);
+grid.position.y = -0.49;
+scene.add(grid);
 
-        if (aiDifficulty === 'easy') aiSpeed = 3;
-        else if (aiDifficulty === 'medium') aiSpeed = 5;
-        else if (aiDifficulty === 'hard') aiSpeed = 9;
-    });
+// Center line
+const centerLineGeom = new THREE.BoxGeometry(0.1, 0.1, ARENA_DEPTH);
+const centerLineMat = new THREE.MeshBasicMaterial({ color: 0x444455 });
+const centerLine = new THREE.Mesh(centerLineGeom, centerLineMat);
+centerLine.position.y = -0.4;
+scene.add(centerLine);
+
+// Walls (top & bottom)
+const wallGeom = new THREE.BoxGeometry(ARENA_WIDTH + 2, 0.5, 0.3);
+const wallMat = NeonMaterials.glow(NeonMaterials.colors.green);
+const topWall = new THREE.Mesh(wallGeom, wallMat);
+topWall.position.set(0, 0, -ARENA_DEPTH / 2 - 0.15);
+scene.add(topWall);
+
+const bottomWall = new THREE.Mesh(wallGeom, wallMat);
+bottomWall.position.set(0, 0, ARENA_DEPTH / 2 + 0.15);
+scene.add(bottomWall);
+
+// Paddles
+const paddleGeom = new THREE.BoxGeometry(PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_DEPTH);
+const paddle1Mat = NeonMaterials.glow(NeonMaterials.colors.cyan);
+const paddle2Mat = NeonMaterials.glow(NeonMaterials.colors.pink);
+
+const paddle1 = new THREE.Mesh(paddleGeom, paddle1Mat);
+paddle1.position.set(-ARENA_WIDTH / 2 + 1, PADDLE_HEIGHT / 2 - 0.5, 0);
+scene.add(paddle1);
+
+const paddle2 = new THREE.Mesh(paddleGeom, paddle2Mat);
+paddle2.position.set(ARENA_WIDTH / 2 - 1, PADDLE_HEIGHT / 2 - 0.5, 0);
+scene.add(paddle2);
+
+// Ball
+const ballGeom = new THREE.SphereGeometry(BALL_RADIUS, 16, 16);
+const ballMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+const ball = new THREE.Mesh(ballGeom, ballMat);
+ball.position.set(0, BALL_RADIUS, 0);
+scene.add(ball);
+
+// Ball glow
+const glowGeom = new THREE.SphereGeometry(BALL_RADIUS * 1.5, 16, 16);
+const glowMat = new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.2
 });
+const ballGlow = new THREE.Mesh(glowGeom, glowMat);
+ball.add(ballGlow);
 
+// Point light attached to ball
+const ballLight = new THREE.PointLight(0xffffff, 1, 8);
+ball.add(ballLight);
+
+// Input
+const keys = {};
 document.addEventListener('keydown', e => {
-    // Start Game
-    if (gameState === 'START' && e.code === 'Space') {
-        startGame();
-        return;
-    }
-
-    // Pause
-    if (gameState === 'PLAYING' && e.code === 'Space') {
-        isPaused = !isPaused;
-        return;
-    }
-
-    // P1 Controls
-    if (e.code === 'KeyW') p1.dy = -1;
-    if (e.code === 'KeyS') p1.dy = 1;
-
-    // P2 Controls (Human)
-    if (isMultiplayer) {
-        if (e.code === 'ArrowUp') p2.dy = -1;
-        if (e.code === 'ArrowDown') p2.dy = 1;
-    }
+    keys[e.key.toLowerCase()] = true;
+    if (e.key.toLowerCase() === 'p' && !isGameOver) togglePause();
 });
+document.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 
-document.addEventListener('keyup', e => {
-    if (e.code === 'KeyW' && p1.dy === -1) p1.dy = 0;
-    if (e.code === 'KeyS' && p1.dy === 1) p1.dy = 0;
-
-    if (isMultiplayer) {
-        if (e.code === 'ArrowUp' && p2.dy === -1) p2.dy = 0;
-        if (e.code === 'ArrowDown' && p2.dy === 1) p2.dy = 0;
-    }
-});
-
-restartBtn.addEventListener('click', () => {
-    resetGame();
-    startGame();
-});
-
-menuBtn.addEventListener('click', () => {
-    resetGame();
-    gameState = 'START';
-    startScreen.classList.remove('hidden');
-    gameOverlay.classList.add('hidden');
-    draw();
-});
-
-function resetGame() {
-    p1.score = 0;
-    p2.score = 0;
-    p1ScoreEl.innerText = 0;
-    p2ScoreEl.innerText = 0;
-    resetBall();
+function togglePause() {
+    isPaused = !isPaused;
+    pauseOverlay.classList.toggle('hidden', !isPaused);
 }
 
-function resetBall() {
-    ball.x = canvas.width / 2;
-    ball.y = canvas.height / 2;
-    // Random direction
-    const dirX = Math.random() > 0.5 ? 1 : -1;
-    const dirY = Math.random() > 0.5 ? 1 : -1;
-    ball.speed = 7;
-    ball.vx = ball.speed * dirX;
-    ball.vy = ball.speed * dirY * 0.5; // Flatter launch
+// Game logic
+function resetBall(direction = 1) {
+    ball.position.set(0, BALL_RADIUS, 0);
+    ballSpeed = 0.15;
+    const angle = (Math.random() - 0.5) * Math.PI / 3;
+    ballVelocity.x = Math.cos(angle) * ballSpeed * direction;
+    ballVelocity.z = Math.sin(angle) * ballSpeed;
 }
 
-function startGame() {
-    gameState = 'PLAYING';
-    startScreen.classList.add('hidden');
-    gameOverlay.classList.add('hidden');
-    loops();
+function updatePaddles() {
+    // Player 1
+    if ((keys['w'] || keys['arrowup']) && paddle1.position.z > -ARENA_DEPTH / 2 + PADDLE_DEPTH) {
+        paddle1.position.z -= 0.2;
+    }
+    if ((keys['s'] || keys['arrowdown']) && paddle1.position.z < ARENA_DEPTH / 2 - PADDLE_DEPTH) {
+        paddle1.position.z += 0.2;
+    }
+
+    // AI for Player 2
+    const aiSpeed = 0.12;
+    const targetZ = ball.position.z;
+    if (paddle2.position.z < targetZ - 0.5) {
+        paddle2.position.z += aiSpeed;
+    } else if (paddle2.position.z > targetZ + 0.5) {
+        paddle2.position.z -= aiSpeed;
+    }
+    paddle2.position.z = Math.max(-ARENA_DEPTH / 2 + PADDLE_DEPTH,
+        Math.min(ARENA_DEPTH / 2 - PADDLE_DEPTH, paddle2.position.z));
 }
 
-function update() {
-    if (isPaused) return;
+function updateBall() {
+    ball.position.x += ballVelocity.x;
+    ball.position.z += ballVelocity.z;
 
-    // Move Paddles
-    p1.y += p1.dy * p1.speed;
-
-    if (isMultiplayer) {
-        p2.y += p2.dy * p2.speed;
-    } else {
-        // AI Movement
-        // Simple tracking
-        const center = p2.y + PADDLE_HEIGHT / 2;
-        if (center < ball.y - 10) {
-            p2.y += aiSpeed;
-        } else if (center > ball.y + 10) {
-            p2.y -= aiSpeed;
-        }
+    // Top/bottom wall collision
+    if (ball.position.z <= -ARENA_DEPTH / 2 + BALL_RADIUS ||
+        ball.position.z >= ARENA_DEPTH / 2 - BALL_RADIUS) {
+        ballVelocity.z *= -1;
     }
 
-    // Clamp Paddles
-    p1.y = Math.max(0, Math.min(canvas.height - PADDLE_HEIGHT, p1.y));
-    p2.y = Math.max(0, Math.min(canvas.height - PADDLE_HEIGHT, p2.y));
+    // Paddle collision
+    // Paddle 1
+    if (ball.position.x <= paddle1.position.x + PADDLE_WIDTH / 2 + BALL_RADIUS &&
+        ball.position.x >= paddle1.position.x - PADDLE_WIDTH / 2 &&
+        Math.abs(ball.position.z - paddle1.position.z) < PADDLE_HEIGHT / 2 + BALL_RADIUS) {
+        ballVelocity.x = Math.abs(ballVelocity.x) * 1.05;
+        ballSpeed *= 1.02;
+        ball.position.x = paddle1.position.x + PADDLE_WIDTH / 2 + BALL_RADIUS;
 
-    // Move Ball
-    ball.x += ball.vx;
-    ball.y += ball.vy;
-
-    // Wall Collision (Top/Bottom)
-    if (ball.y <= 0 || ball.y + BALL_SIZE >= canvas.height) {
-        ball.vy *= -1;
-        // Sound effect here
+        // Angle based on hit position
+        const hitPos = (ball.position.z - paddle1.position.z) / (PADDLE_HEIGHT / 2);
+        ballVelocity.z = hitPos * ballSpeed * 0.8;
     }
 
-    // Paddle Collision
-    // P1
-    if (ball.vx < 0 &&
-        ball.x <= p1.x + PADDLE_WIDTH &&
-        ball.x >= p1.x &&
-        ball.y + BALL_SIZE >= p1.y &&
-        ball.y <= p1.y + PADDLE_HEIGHT) {
+    // Paddle 2
+    if (ball.position.x >= paddle2.position.x - PADDLE_WIDTH / 2 - BALL_RADIUS &&
+        ball.position.x <= paddle2.position.x + PADDLE_WIDTH / 2 &&
+        Math.abs(ball.position.z - paddle2.position.z) < PADDLE_HEIGHT / 2 + BALL_RADIUS) {
+        ballVelocity.x = -Math.abs(ballVelocity.x) * 1.05;
+        ballSpeed *= 1.02;
+        ball.position.x = paddle2.position.x - PADDLE_WIDTH / 2 - BALL_RADIUS;
 
-        hitPaddle(p1);
-    }
-
-    // P2
-    if (ball.vx > 0 &&
-        ball.x + BALL_SIZE >= p2.x &&
-        ball.x + BALL_SIZE <= p2.x + PADDLE_WIDTH &&
-        ball.y + BALL_SIZE >= p2.y &&
-        ball.y <= p2.y + PADDLE_HEIGHT) {
-
-        hitPaddle(p2);
+        const hitPos = (ball.position.z - paddle2.position.z) / (PADDLE_HEIGHT / 2);
+        ballVelocity.z = hitPos * ballSpeed * 0.8;
     }
 
     // Scoring
-    if (ball.x < 0) {
-        p2.score++;
-        p2ScoreEl.innerText = p2.score;
+    if (ball.position.x < -ARENA_WIDTH / 2 - 1) {
+        score2++;
+        score2El.textContent = score2;
         checkWin();
-        if (gameState === 'PLAYING') resetBall();
-    } else if (ball.x > canvas.width) {
-        p1.score++;
-        p1ScoreEl.innerText = p1.score;
-        checkWin();
-        if (gameState === 'PLAYING') resetBall();
+        resetBall(1);
     }
-}
-
-function hitPaddle(paddle) {
-    // Reverse X
-    ball.vx *= -1;
-
-    // Increase Speed slightly
-    ball.speed = Math.min(ball.speed + 0.5, 15);
-
-    // Adjust Y velocity based on hit position
-    const center = paddle.y + PADDLE_HEIGHT / 2;
-    const hitY = (ball.y + BALL_SIZE / 2) - center;
-    // Normalize -1 to 1
-    const normalized = hitY / (PADDLE_HEIGHT / 2);
-
-    ball.vy = normalized * 10; // Max vertical speed
-
-    // Ensure X velocity matches speed but keeps sign
-    const dirX = ball.vx > 0 ? 1 : -1;
-    // We want total velocity vector magnitude to look like 'ball.speed' roughly,
-    // but simplifying: just set X to fixed high speed is boring.
-    // Let's standardise:
-    // Simple arcade physics: X speed constant-ish, Y speed varies.
-    // Actually, let's re-normalize vector to speed.
-    const speed = ball.speed;
-    const angle = Math.atan2(ball.vy, ball.vx);
-    ball.vx = Math.cos(angle) * speed * (ball.vx > 0 ? 1 : -1);
-    // Wait, cos(angle) already has sign.
-    // Just re-calc components.
-    // But we modified VY arbitrarily. 
-    // Let's just set VX to ensure forward momentum.
-    ball.vx = (speed * (ball.vx > 0 ? 1 : -1));
-
-    // Push ball out to avoid sticking
-    if (ball.vx > 0) ball.x = paddle.x + PADDLE_WIDTH + 1;
-    else ball.x = paddle.x - BALL_SIZE - 1;
+    if (ball.position.x > ARENA_WIDTH / 2 + 1) {
+        score1++;
+        score1El.textContent = score1;
+        checkWin();
+        resetBall(-1);
+    }
 }
 
 function checkWin() {
-    if (p1.score >= WIN_SCORE || p2.score >= WIN_SCORE) {
-        gameState = 'END';
-        gameOverlay.classList.remove('hidden');
-        if (p1.score > p2.score) {
-            overlayTitle.innerText = "PLAYER 1 WINS!";
-            overlayTitle.style.color = p1.color;
-        } else {
-            overlayTitle.innerText = isMultiplayer ? "PLAYER 2 WINS!" : "CPU WINS!";
-            overlayTitle.style.color = p2.color;
-        }
+    if (score1 >= WIN_SCORE) {
+        isGameOver = true;
+        winText.textContent = 'PLAYER 1 WINS!';
+        winText.style.color = '#00d4ff';
+        winOverlay.classList.remove('hidden');
+    } else if (score2 >= WIN_SCORE) {
+        isGameOver = true;
+        winText.textContent = 'CPU WINS!';
+        winText.style.color = '#ff0066';
+        winOverlay.classList.remove('hidden');
     }
 }
 
-function draw() {
-    // Clear
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function animate() {
+    requestAnimationFrame(animate);
 
-    // Center Line
-    ctx.setLineDash([10, 15]);
-    ctx.beginPath();
-    ctx.moveTo(canvas.width / 2, 0);
-    ctx.lineTo(canvas.width / 2, canvas.height);
-    ctx.strokeStyle = '#222';
-    ctx.lineWidth = 4;
-    ctx.stroke();
-    ctx.setLineDash([]); // Reset
-
-    // Paddles
-    ctx.fillStyle = p1.color;
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = p1.color;
-    ctx.fillRect(p1.x, p1.y, PADDLE_WIDTH, PADDLE_HEIGHT);
-
-    ctx.fillStyle = p2.color;
-    ctx.shadowColor = p2.color;
-    ctx.fillRect(p2.x, p2.y, PADDLE_WIDTH, PADDLE_HEIGHT);
-
-    // Ball
-    ctx.fillStyle = '#ffff00';
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = '#ffff00';
-    ctx.fillRect(ball.x, ball.y, BALL_SIZE, BALL_SIZE);
-
-    ctx.shadowBlur = 0;
-
-    if (isPaused) {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#fff';
-        ctx.font = '30px "Press Start 2P"';
-        ctx.textAlign = 'center';
-        ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
+    if (!isPaused && !isGameOver) {
+        updatePaddles();
+        updateBall();
     }
+
+    // Subtle camera movement
+    camera.position.x = Math.sin(Date.now() * 0.0005) * 0.5;
+
+    renderer.render(scene, camera);
 }
 
-function loops() {
-    if (gameState === 'PLAYING') {
-        update();
-        draw();
-        requestAnimationFrame(loops);
-    }
-}
+// Event handlers
+startBtn.addEventListener('click', () => {
+    startOverlay.classList.add('hidden');
+    isPaused = false;
+    resetBall(Math.random() > 0.5 ? 1 : -1);
+});
 
-// Initial draw
-draw();
+resumeBtn.addEventListener('click', () => {
+    isPaused = false;
+    pauseOverlay.classList.add('hidden');
+});
+
+restartBtn.addEventListener('click', () => {
+    score1 = score2 = 0;
+    score1El.textContent = score2El.textContent = '0';
+    isGameOver = false;
+    winOverlay.classList.add('hidden');
+    resetBall(Math.random() > 0.5 ? 1 : -1);
+});
+
+// Start
+animate();

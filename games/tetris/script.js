@@ -61,8 +61,8 @@ const PIECE_COLORS = [
 ];
 
 // State
-let arena = createMatrix(COLS, ROWS);
-let player = {
+const arena = createMatrix(COLS, ROWS);
+const player = {
     pos: { x: 0, y: 0 },
     matrix: null,
     score: 0,

@@ -1,8 +1,8 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-let score = 0;
-let isGameRunning = true;
+const score = 0;
+const isGameRunning = true;
 
 // precise game loop using requestAnimationFrame and delta time
 let lastTime = 0;

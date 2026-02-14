@@ -18,7 +18,7 @@ const PIPE_WIDTH = 50;
 const PIPE_GAP = 140; // Pixels
 
 // Game State
-let bird = {
+const bird = {
     x: 50,
     y: 150,
     width: 30, // Visual width
@@ -102,7 +102,7 @@ function update() {
     }
 
     for (let i = 0; i < pipes.length; i++) {
-        let p = pipes[i];
+        const p = pipes[i];
         p.x -= PIPE_SPEED;
 
         // Collision

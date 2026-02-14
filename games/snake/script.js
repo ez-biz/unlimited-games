@@ -13,7 +13,7 @@ const GAME_SPEED = 100; // Milliseconds per move (lower = faster)
 // Game State
 let score = 0;
 let snake = [];
-let food = { x: 0, y: 0 };
+const food = { x: 0, y: 0 };
 let velocity = { x: 0, y: 0 };
 let inputQueue = []; // Queue for inputs to prevent self-collision on quick turns
 let lastTime = 0;
@@ -96,7 +96,7 @@ function update() {
     }
 
     // Collision: Self
-    for (let part of snake) {
+    for (const part of snake) {
         if (head.x === part.x && head.y === part.y) {
             gameOver();
             return;
@@ -172,7 +172,7 @@ function spawnFood() {
         food.y = Math.floor(Math.random() * TILE_COUNT);
 
         validPosition = true;
-        for (let part of snake) {
+        for (const part of snake) {
             if (part.x === food.x && part.y === food.y) {
                 validPosition = false;
                 break;

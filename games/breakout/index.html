@@ -4,37 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Brick Breaker | Unlimited Games</title>
+    <title>Neon Breaker 3D | Unlimited Games</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="../../assets/lib/neon-materials.js"></script>
 </head>
 
 <body>
+    <div class="game-container">
+        <header>
+            <a href="../../index.html" class="back-btn">← Hub</a>
+            <h1>NEON BREAKER <span class="badge">3D</span></h1>
+            <div class="hud">
+                <div class="hud-item">
+                    <span class="label">SCORE</span>
+                    <span id="score">0</span>
+                </div>
+                <div class="hud-item">
+                    <span class="label">LIVES</span>
+                    <span id="lives">♥♥♥</span>
+                </div>
+                <div class="hud-item">
+                    <span class="label">LEVEL</span>
+                    <span id="level">1</span>
+                </div>
+            </div>
+        </header>
 
-    <div class="game-ui">
-        <a href="../../index.html" class="back-btn">&larr; Back to Hub</a>
-        <div class="header-info">
-            <h1 id="game-title">NEON BREAKER</h1>
-            <div id="lives-display">Lives: <span id="lives">3</span></div>
-        </div>
-        <div id="score-board">SCORE: <span id="score">0</span></div>
-    </div>
+        <canvas id="gameCanvas"></canvas>
 
-    <div id="game-container">
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
-        <div id="game-overlay" class="hidden">
-            <h2 id="overlay-title">GAME OVER</h2>
-            <p id="overlay-score">Score: 0</p>
-            <button id="restart-btn">Try Again</button>
-        </div>
-        <div id="level-overlay" class="hidden">
-            <h2 id="level-title">LEVEL 1 COMPLETE</h2>
-            <button id="next-level-btn">Next Level</button>
-        </div>
-    </div>
+        <p class="hint">← → or Mouse to move paddle | SPACE to launch | P to pause</p>
 
-    <div class="controls-hint">
-        <p>Use <strong>Arrow Keys</strong> or <strong>Mouse</strong> to move paddle</p>
+        <div id="start-overlay" class="overlay">
+            <h2>NEON BREAKER 3D</h2>
+            <p>Break all the bricks!</p>
+            <button id="startBtn">START GAME</button>
+        </div>
+
+        <div id="pause-overlay" class="overlay hidden">
+            <h2>PAUSED</h2>
+            <button id="resumeBtn">RESUME</button>
+        </div>
+
+        <div id="game-over" class="overlay hidden">
+            <h2 id="gameOverText">GAME OVER</h2>
+            <p>Final Score: <span id="finalScore">0</span></p>
+            <button id="restartBtn">PLAY AGAIN</button>
+        </div>
     </div>
 
     <script src="script.js"></script>

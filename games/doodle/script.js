@@ -43,7 +43,7 @@ const errorToast = document.getElementById('errorToast');
 // State
 let currentRoom = null;
 let isHost = false;
-let isDrawing = false;
+const isDrawing = false;
 let myId = null;
 let currentDrawerId = null;
 let timerInterval = null;
@@ -55,7 +55,7 @@ let lastY = 0;
 let brushColor = '#000000';
 let brushSize = 8;
 let isEraser = false;
-let drawHistory = [];
+const drawHistory = [];
 
 // Color palette
 const COLORS = [

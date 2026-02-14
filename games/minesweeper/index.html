@@ -4,52 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Mines | Unlimited Games</title>
+    <title>Neon Mines 3D | Unlimited Games</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="../../assets/lib/neon-materials.js"></script>
 </head>
 
 <body>
-
-    <div class="game-ui">
-        <a href="../../index.html" class="back-btn">&larr; Back to Hub</a>
-        <h1 id="game-title">NEON MINES</h1>
-    </div>
-
-    <div id="game-container">
-        <div class="hud">
-            <div class="counter-box">
-                <span id="mine-count">010</span>
-                <span class="label">MINES</span>
+    <div class="game-container">
+        <header>
+            <a href="../../index.html" class="back-btn">← Hub</a>
+            <h1>NEON MINES <span class="badge">3D</span></h1>
+            <div class="hud">
+                <div class="hud-item">
+                    <span class="label">💣</span>
+                    <span id="minesLeft">10</span>
+                </div>
+                <div class="hud-item">
+                    <span class="label">⏱️</span>
+                    <span id="timer">0</span>
+                </div>
             </div>
+        </header>
 
-            <button id="face-btn">🙂</button>
+        <canvas id="gameCanvas"></canvas>
 
-            <div class="counter-box">
-                <span id="timer">000</span>
-                <span class="label">TIME</span>
+        <div class="controls">
+            <div class="difficulty-btns">
+                <button class="diff-btn active" data-size="8" data-mines="10">Easy</button>
+                <button class="diff-btn" data-size="12" data-mines="25">Medium</button>
+                <button class="diff-btn" data-size="16" data-mines="50">Hard</button>
             </div>
+            <p class="hint">Click to reveal | Right-click to flag | Scroll to zoom</p>
         </div>
 
-        <div id="grid-wrapper">
-            <div id="grid"></div>
+        <div id="game-overlay" class="overlay hidden">
+            <h2 id="overlay-title">Game Over!</h2>
+            <p id="overlay-text">Time: 0s</p>
+            <button id="restartBtn">Play Again</button>
         </div>
-
-        <div class="controls-panel">
-            <button class="diff-btn active" data-mode="easy">EASY (9x9)</button>
-            <button class="diff-btn" data-mode="medium">MEDIUM (16x16)</button>
-            <button class="diff-btn" data-mode="hard">HARD (30x16)</button>
-        </div>
-
-        <div id="game-overlay" class="hidden overlay">
-            <h2 id="overlay-title">CLEARED!</h2>
-            <p>Time: <span id="final-time">0</span>s</p>
-            <button id="restart-btn">PLAY AGAIN</button>
-        </div>
-    </div>
-
-    <div class="controls-hint">
-        <p><strong>L-CLICK</strong> Reveal • <strong>R-CLICK</strong> Flag</p>
     </div>
 
     <script src="script.js"></script>

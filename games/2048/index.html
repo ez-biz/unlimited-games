@@ -4,16 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon 2048 | Unlimited Games</title>
+    <title>Neon 2048 3D | Unlimited Games</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="../../assets/lib/neon-materials.js"></script>
 </head>
 
 <body>
     <div class="game-container">
         <header>
             <a href="../../index.html" class="back-btn">← Hub</a>
-            <h1>NEON 2048</h1>
+            <h1>NEON 2048 <span class="badge">3D</span></h1>
             <div class="scores">
                 <div class="score-box">
                     <span class="label">SCORE</span>
@@ -26,22 +28,17 @@
             </div>
         </header>
 
-        <div id="grid-container">
-            <div id="grid"></div>
-        </div>
+        <canvas id="gameCanvas"></canvas>
 
         <div class="controls">
             <button id="newGameBtn">New Game</button>
+            <p class="hint">Use Arrow Keys or WASD to move tiles</p>
         </div>
 
-        <p class="hint">Use <strong>Arrow Keys</strong> or <strong>WASD</strong> to move tiles</p>
-
         <div id="game-overlay" class="overlay hidden">
-            <div class="overlay-content">
-                <h2 id="overlay-title">Game Over!</h2>
-                <p id="overlay-score">Score: 0</p>
-                <button id="restartBtn">Try Again</button>
-            </div>
+            <h2 id="overlay-title">Game Over!</h2>
+            <p id="overlay-score">Score: 0</p>
+            <button id="restartBtn">Try Again</button>
         </div>
     </div>
 
